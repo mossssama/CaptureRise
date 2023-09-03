@@ -11,11 +11,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        MyAlarmManager.initialize(context)
-        MyAlarmManager.startAlarm()
-
-        /* To be deleted with its class */
-        NotificationsUtils.launchNotification(context, title = "Alarm at ${ intent.extras?.getString(AlarmUtils.Extras.HOURS) } !")
+//        MyAlarmManager.initialize(context)
+//        MyAlarmManager.startAlarm()
+//        NotificationsUtils.launchNotification(context, title = "Alarm at ${ intent.extras?.getString(AlarmUtils.Extras.HOURS) }:${ intent.extras?.getString(AlarmUtils.Extras.MINUTES) } !")
 
     }
 }
