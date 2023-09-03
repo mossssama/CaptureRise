@@ -49,7 +49,6 @@ class RecyclerViewAdapter(
             itemView.setOnClickListener { onItemClickListener(item) }
 
             isEnabled.setOnClickListener { onSwitchToggleListener(item,isEnabled.isChecked) }
-//            isEnabled.setOnCheckedChangeListener { _, isChecked -> onSwitchToggleListener(item, isChecked) }
 
         }
     }

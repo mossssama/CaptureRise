@@ -1,5 +1,6 @@
 package com.newOs.captureRise.ui
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
@@ -19,6 +20,9 @@ import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 
 import androidx.lifecycle.Observer
+import com.newOs.captureRise.managers.MyAlarmManager
+import com.newOs.captureRise.utils.AlarmUtils
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,6 +35,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        MyAlarmManager.initialize(this)
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         val newArrayList: ArrayList<Alarm> = ArrayList()
@@ -39,19 +45,47 @@ class MainActivity : AppCompatActivity() {
 
         adapter = RecyclerViewAdapter(
             newArrayList,
-            onItemLongClickListener = { item -> deleteAlarm(item) },
+            onItemLongClickListener = { item ->
+                deleteAlarm(item)
+                if (item.isEnabled) disableAlarm(item)
+            },
             onItemClickListener = { item -> openTimePickerForUpdate(item.id,splitAlarmTime(item)[0].toInt(), splitAlarmTime(item)[1].toInt(), item.isEnabled) },
             onSwitchToggleListener = { item, isChecked ->
                 Log.i("OsOs","${item.id}    -     ${item.alarmTime}    -    ${item.isEnabled}")
                 updateAlarmStatus(item.id,item.alarmTime,isChecked)
+                if(isChecked) enableAlarm(item)
+                else disableAlarm(item)
             }
         )
 
         binding.addAlarm.setOnClickListener { openTimePickerForAdd(12,0) }
 
+        binding.closeAlarm.setOnClickListener { MyAlarmManager.stopAlarm() }
+
         binding.recyclerView.adapter = adapter
 
         observeAlarms()
+    }
+
+    private fun enableAlarm(item: Alarm) {
+        val calendar = Calendar.getInstance()
+        AlarmUtils.setAlarmCalendar(
+            calendar,
+            splitAlarmTime(item)[0].toInt(),
+            splitAlarmTime(item)[1].toInt(),
+            0
+        )
+        AlarmUtils.enableAlarm(
+            this,
+            calendar,
+            splitAlarmTime(item)[0],
+            splitAlarmTime(item)[1],
+            convertTimeStringToInt(item.alarmTime)
+        )
+    }
+
+    private fun disableAlarm(item: Alarm) {
+        AlarmUtils.disableAlarm(this, convertTimeStringToInt(item.alarmTime))
     }
 
     private fun openTimePickerForAdd(hr: Int, min: Int) {
@@ -95,9 +129,7 @@ class MainActivity : AppCompatActivity() {
         MaterialTimePicker.Builder().setTimeFormat(clockFormat).setHour(hr).setMinute(min).setTitleText(title).build()
 
     private fun observeAlarms() {
-        dao.getAllAlarmsLiveData().observe(this@MainActivity, Observer { alarms ->
-            alarms?.let { adapter.updateData(alarms) }
-        })
+        dao.getAllAlarmsLiveData().observe(this@MainActivity, Observer { alarms -> alarms?.let { adapter.updateData(alarms) } })
     }
 
     private fun updateAlarmStatus(id: Int,alarmTime:String, isChecked: Boolean) {
@@ -117,4 +149,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun splitAlarmTime(item: Alarm) = item.alarmTime.split(":")
+
+    private fun convertTimeStringToInt(timeStr: String): Int = timeStr.replace(":", "").toInt()
+
 }
