@@ -36,6 +36,8 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
 
+        binding.closeAlarm.hide()
+
         MyAlarmManager.initialize(this)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
