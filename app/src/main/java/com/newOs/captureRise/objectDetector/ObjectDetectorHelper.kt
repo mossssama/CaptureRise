@@ -6,6 +6,13 @@ import android.os.SystemClock
 import android.util.Log
 import com.google.android.gms.tflite.client.TfLiteInitializationOptions
 import com.google.android.gms.tflite.gpu.support.TfLiteGpu
+import com.newOs.captureRise.dataStore.DataStoreManager
+import com.newOs.captureRise.managers.MyAlarmManager
+import com.newOs.captureRise.utils.ImageUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
 import org.tensorflow.lite.support.image.ops.Rot90Op
@@ -108,6 +115,35 @@ class ObjectDetectorHelper(
         val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
 
         val results = objectDetector?.detect(tensorImage)
+
+        val dataStoreManager = DataStoreManager.getInstance(context)
+        /***/
+        if (results != null && results.isNotEmpty()) {
+            val detectedObjectNames = mutableListOf<String>()
+
+            // Extract object labels from detection results
+            for (result in results) { for (category in result.categories) { detectedObjectNames.add(category.label) } }
+
+            // Show a toast with the detected object names
+            val detectedObjectNamesString = detectedObjectNames.joinToString(", ")
+
+            GlobalScope.launch {
+                dataStoreManager.desiredObject.collect { desiredObj ->
+                    if(ImageUtils.isStringExists(detectedObjectNames,desiredObj)){
+                        MyAlarmManager.initialize(context)
+                        MyAlarmManager.stopAlarm()
+                        CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
+                    }
+                }
+            }
+
+            Log.d("OsOs", "Detected Objects: $detectedObjectNamesString")
+        } else {
+            Log.d("OsOs", "No objects detected")
+        }
+
+        /***/
+
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
         objectDetectorListener.onResults(results, inferenceTime, tensorImage.height, tensorImage.width)
     }
@@ -132,4 +168,5 @@ class ObjectDetectorHelper(
         const val MODEL_EFFICIENTDETV1 = 2
         const val MODEL_EFFICIENTDETV2 = 3
     }
+
 }

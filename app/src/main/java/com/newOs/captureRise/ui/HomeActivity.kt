@@ -77,8 +77,8 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, CameraActivity::class.java))
 
             /** Must be executed after the user picturing right image */
-            MyAlarmManager.stopAlarm()
-            CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
+//            MyAlarmManager.stopAlarm()
+//            CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
             /** Must be executed after the user picturing right image */
         }
 

@@ -15,10 +15,16 @@ import androidx.camera.core.*
 import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.newOs.captureRise.R
+import com.newOs.captureRise.dataStore.DataStoreManager
 import com.newOs.captureRise.databinding.FragmentCameraBinding
 import com.newOs.captureRise.objectDetector.ObjectDetectorHelper
+import com.newOs.captureRise.utils.ImageUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.task.gms.vision.detector.Detection
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -60,6 +66,19 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         savedInstanceState: Bundle?
     ): View {
         fragmentCameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
+        val dataStoreManager = DataStoreManager.getInstance(requireContext())
+
+        /***/
+        /* Set the desired image */
+        val desiredObject = ImageUtils.myStringList[ImageUtils.generateRandomNumberExc(ImageUtils.myStringList.size)]
+        CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setDesiredObject(desiredObject) }
+
+        /* Update the desired image */
+        lifecycleScope.launch {
+            dataStoreManager.desiredObject.collect { desiredObj -> fragmentCameraBinding.bottomSheetLayout.tvToBeCaptured.text = desiredObj }
+        }
+
+        /***/
 
         return fragmentCameraBinding.root
     }

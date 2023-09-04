@@ -30,6 +30,31 @@
                 android:contentDescription="@string/alt_bottom_sheet_chevron" />
         </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bottom_sheet_default_row_margin">
+
+            <TextView
+                android:text="Capture the following"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/bottom_sheet_text_size"
+                android:textColor="@color/bottom_sheet_text_color" />
+
+            <TextView
+                android:id="@+id/tv_toBeCaptured"
+                android:hint=""
+                android:textSize="@dimen/bottom_sheet_text_size"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:minWidth="@dimen/bottom_sheet_spinner_delegate_min_width" />
+
+        </RelativeLayout>
+
         <!-- Inference time row -->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

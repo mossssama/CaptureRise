@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -17,6 +18,9 @@ class DataStoreManager private constructor(private val context: Context) {
     private val _isAlarmOn = MutableStateFlow(false)
     val isAlarmOn: StateFlow<Boolean> = _isAlarmOn.asStateFlow()
 
+    private val _desiredObject = MutableStateFlow("")
+    val desiredObject: StateFlow<String> = _desiredObject.asStateFlow()
+
     init {
         _isAlarmOn.value = false
         observeDataStore()
@@ -28,12 +32,17 @@ class DataStoreManager private constructor(private val context: Context) {
                 if (exception is Exception) { }
             }.collect { preferences ->
                 _isAlarmOn.value = preferences[booleanPreferencesKey("isAlarmOn")] ?: false
+                _desiredObject.value = preferences[stringPreferencesKey("desiredObject")] ?: ""
             }
         }
     }
 
     suspend fun setIsAlarmOn(isAlarmOn: Boolean) {
         context.dataStore.edit { preferences -> preferences[booleanPreferencesKey("isAlarmOn")] = isAlarmOn }
+    }
+
+    suspend fun setDesiredObject(desiredObject: String) {
+        context.dataStore.edit { preferences -> preferences[stringPreferencesKey("desiredObject")] = desiredObject }
     }
 
     companion object {
