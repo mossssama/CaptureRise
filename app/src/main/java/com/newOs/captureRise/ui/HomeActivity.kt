@@ -130,7 +130,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun buildMaterialTimePicker(clockFormat: Int, hr: Int, min: Int, title: String) =
-        MaterialTimePicker.Builder().setTimeFormat(clockFormat).setHour(hr).setMinute(min).setTitleText(title).build()
+        MaterialTimePicker.Builder().setTimeFormat(clockFormat).setHour(hr).setMinute(min).setTheme(R.style.TimePicker).setTitleText(title).build()
 
     private fun observeAlarms() {
         dao.getAllAlarmsLiveData().observe(this@HomeActivity, Observer { alarms -> alarms?.let { adapter.updateData(alarms) } })

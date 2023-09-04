@@ -6,11 +6,43 @@
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondary">@color/orange</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="colorPrimary">@color/orange</item>
+        <item name="materialClockStyle">@style/TimePicker.Clock</item>
+        <item name="materialButtonOutlinedStyle">@style/TimePicker.Button</item>
+        <item name="chipStyle">@style/TimePicker.Chip</item>
+        <item name="imageButtonStyle">@style/TimePicker.ImageButton</item>
+    </style>
+
+
+    <style name="TimePicker.Clock" parent="Widget.MaterialComponents.TimePicker.Clock">
+        <item name="clockFaceBackgroundColor">#9EE0E0E0</item>
+        <item name="clockHandColor">#ff6700</item>
+        <item name="clockNumberTextColor">@color/black</item>
+    </style>
+
+    <style name="TimePicker.Button" parent="Widget.MaterialComponents.TimePicker.Button">
+        <item name="backgroundTint">#ff6700</item>
+        <item name="android:textColor">@color/teal_200</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+<!--    Upper Text Views for Hours & Minutes-->
+    <style name="TimePicker.Chip" parent="Widget.MaterialComponents.TimePicker.Display">
+        <item name="chipBackgroundColor">#FDC7AB</item>
+        <item name="android:textColor">#ff6700</item>
+    </style>
+
+    <style name="TimePicker.ImageButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
+        <item name="iconTint">#9EE0E0E0</item>
+    </style>
+
 </resources>

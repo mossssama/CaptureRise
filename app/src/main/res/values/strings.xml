@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">CaptureRise</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="alt_bottom_sheet_chevron">Bottom sheet expandable indicator</string>
@@ -23,7 +22,6 @@
     <string name="label_threads">Number of Threads</string>
     <string name="label_delegate">Delegate</string>
     <string name="label_models">ML Model</string>
-
 
     <string-array name="delegate_spinner_titles">
         <item>CPU</item>
