@@ -26,65 +26,66 @@ import com.newOs.captureRise.R
 import com.newOs.captureRise.databinding.ActivityHomeBinding
 import com.newOs.captureRise.managers.MyAlarmManager
 import com.newOs.captureRise.utils.AlarmUtils
-import kotlinx.coroutines.CoroutineScope
+import com.newOs.captureRise.utils.ParseUtils.Companion.convertTimeStringToInt
+import com.newOs.captureRise.utils.ParseUtils.Companion.splitAlarmTime
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHomeBinding
     private lateinit var dao: AlarmDao
     private lateinit var adapter: RecyclerViewAdapter
-    private lateinit var dataStoreManager: DataStoreManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
-        dataStoreManager = DataStoreManager.getInstance(this)
-
-        lifecycleScope.launch {
-            dataStoreManager.isAlarmOn.collect { isAlarmOn ->
-                if (isAlarmOn) binding.closeAlarm.show() else binding.closeAlarm.hide()
-            }
-        }
-
+        val binding: ActivityHomeBinding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        val dataStoreManager = DataStoreManager.getInstance(this)
         MyAlarmManager.initialize(this)
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-
-
-        val newArrayList: ArrayList<Alarm> = ArrayList()
-
         dao = AlarmDatabase.getInstance(this).alarmDao
 
-        adapter = RecyclerViewAdapter(
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.addAlarm.setOnClickListener { openTimePickerForAdd(12,0) }
+        binding.closeAlarm.setOnClickListener { startActivity(Intent(this, CameraActivity::class.java)) }
+
+        determineCloseButtonState(dataStoreManager, binding)
+
+        adapter = getRecyclerViewAdapter(ArrayList())
+        binding.recyclerView.adapter = adapter
+
+        observeAlarms()
+    }
+
+    private fun getRecyclerViewAdapter(newArrayList: ArrayList<Alarm>) =
+        RecyclerViewAdapter(
             newArrayList,
             onItemLongClickListener = { item ->
                 deleteAlarm(item)
                 if (item.isEnabled) disableAlarm(item)
             },
-            onItemClickListener = { item -> openTimePickerForUpdate(item.id,splitAlarmTime(item)[0].toInt(), splitAlarmTime(item)[1].toInt(), item.isEnabled) },
+            onItemClickListener = { item ->
+                openTimePickerForUpdate(
+                    item.id,
+                    splitAlarmTime(item)[0].toInt(),
+                    splitAlarmTime(item)[1].toInt(),
+                    item.isEnabled
+                )
+            },
             onSwitchToggleListener = { item, isChecked ->
-                Log.i("OsOs","${item.id}    -     ${item.alarmTime}    -    ${item.isEnabled}")
-                updateAlarmStatus(item.id,item.alarmTime,isChecked)
-                if(isChecked) enableAlarm(item)
+                Log.i("OsOs", "${item.id}    -     ${item.alarmTime}    -    ${item.isEnabled}")
+                updateAlarmStatus(item.id, item.alarmTime, isChecked)
+                if (isChecked) enableAlarm(item)
                 else disableAlarm(item)
             }
         )
 
-        binding.addAlarm.setOnClickListener { openTimePickerForAdd(12,0) }
-
-        binding.closeAlarm.setOnClickListener {
-            startActivity(Intent(this, CameraActivity::class.java))
-
-            /** Must be executed after the user picturing right image */
-//            MyAlarmManager.stopAlarm()
-//            CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
-            /** Must be executed after the user picturing right image */
+    private fun determineCloseButtonState(
+        dataStoreManager: DataStoreManager,
+        binding: ActivityHomeBinding
+    ) {
+        lifecycleScope.launch {
+            dataStoreManager.isAlarmOn.collect { isAlarmOn ->
+                if (isAlarmOn) binding.closeAlarm.show() else binding.closeAlarm.hide()
+            }
         }
-
-        binding.recyclerView.adapter = adapter
-
-        observeAlarms()
     }
 
     private fun enableAlarm(item: Alarm) {
@@ -173,9 +174,5 @@ class HomeActivity : AppCompatActivity() {
     private fun insertAlarm(picker: MaterialTimePicker) {
         GlobalScope.launch(Dispatchers.IO) { dao.insertAlarm(Alarm("${picker.hour}:${picker.minute}", false)) }
     }
-
-    private fun splitAlarmTime(item: Alarm) = item.alarmTime.split(":")
-
-    private fun convertTimeStringToInt(timeStr: String): Int = timeStr.replace(":", "").toInt()
 
 }

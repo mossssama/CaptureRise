@@ -68,7 +68,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         fragmentCameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
         val dataStoreManager = DataStoreManager.getInstance(requireContext())
 
-        /***/
         /* Set the desired image */
         val desiredObject = ImageUtils.myStringList[ImageUtils.generateRandomNumberExc(ImageUtils.myStringList.size)]
         CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setDesiredObject(desiredObject) }
@@ -78,9 +77,22 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             dataStoreManager.desiredObject.collect { desiredObj -> fragmentCameraBinding.bottomSheetLayout.tvToBeCaptured.text = desiredObj }
         }
 
-        /***/
+        /* Return if the user pictured the desired object */
+        lifecycleScope.launch {
+            dataStoreManager.isAlarmOn.collect { isAlarmOn ->
+                if(!isAlarmOn) returnToHomeActivity()
+            }
+        }
 
         return fragmentCameraBinding.root
+    }
+
+    private fun returnToHomeActivity() {
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.remove(requireParentFragment())
+        fragmentTransaction.commit()
+        requireActivity().finish()
     }
 
     @SuppressLint("MissingPermission")

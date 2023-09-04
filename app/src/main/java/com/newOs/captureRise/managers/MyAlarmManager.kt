@@ -69,6 +69,6 @@ object MyAlarmManager {
     }
 
     private fun cancelWakeLock() {
-        wakeLock?.release()
+        if(wakeLock!!.isHeld) wakeLock?.release()
     }
 }

@@ -21,8 +21,6 @@ class AlarmReceiver : BroadcastReceiver() {
             MyAlarmManager.startAlarm()
         }
 
-//        MyAlarmManager.initialize(context)
-//        MyAlarmManager.startAlarm()
 //        NotificationsUtils.launchNotification(context, title = "Alarm at ${ intent.extras?.getString(AlarmUtils.Extras.HOURS) }:${ intent.extras?.getString(AlarmUtils.Extras.MINUTES) } !")
 
     }
