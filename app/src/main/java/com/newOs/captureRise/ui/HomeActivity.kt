@@ -20,10 +20,13 @@ import kotlinx.coroutines.launch
 import kotlin.collections.ArrayList
 
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import com.newOs.captureRise.DataStoreManager
 import com.newOs.captureRise.R
 import com.newOs.captureRise.databinding.ActivityHomeBinding
 import com.newOs.captureRise.managers.MyAlarmManager
 import com.newOs.captureRise.utils.AlarmUtils
+import kotlinx.coroutines.CoroutineScope
 import java.util.*
 
 class HomeActivity : AppCompatActivity() {
@@ -31,16 +34,23 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var dao: AlarmDao
     private lateinit var adapter: RecyclerViewAdapter
+    private lateinit var dataStoreManager: DataStoreManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_home)
+        dataStoreManager = DataStoreManager.getInstance(this)
 
-        binding.closeAlarm.hide()
+        lifecycleScope.launch {
+            dataStoreManager.isAlarmOn.collect { isAlarmOn ->
+                if (isAlarmOn) binding.closeAlarm.show() else binding.closeAlarm.hide()
+            }
+        }
 
         MyAlarmManager.initialize(this)
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
+
 
         val newArrayList: ArrayList<Alarm> = ArrayList()
 
@@ -64,8 +74,13 @@ class HomeActivity : AppCompatActivity() {
         binding.addAlarm.setOnClickListener { openTimePickerForAdd(12,0) }
 
         binding.closeAlarm.setOnClickListener {
+
+            /** Must be executed after the user picturing right image */
+            MyAlarmManager.stopAlarm()
+            CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
+            /** Must be executed after the user picturing right image */
+
             startActivity(Intent(this, MainActivity::class.java))
-//            MyAlarmManager.stopAlarm()
         }
 
         binding.recyclerView.adapter = adapter
