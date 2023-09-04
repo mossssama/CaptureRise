@@ -21,7 +21,7 @@ import kotlin.collections.ArrayList
 
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.newOs.captureRise.DataStoreManager
+import com.newOs.captureRise.dataStore.DataStoreManager
 import com.newOs.captureRise.R
 import com.newOs.captureRise.databinding.ActivityHomeBinding
 import com.newOs.captureRise.managers.MyAlarmManager
@@ -74,13 +74,12 @@ class HomeActivity : AppCompatActivity() {
         binding.addAlarm.setOnClickListener { openTimePickerForAdd(12,0) }
 
         binding.closeAlarm.setOnClickListener {
+            startActivity(Intent(this, CameraActivity::class.java))
 
             /** Must be executed after the user picturing right image */
             MyAlarmManager.stopAlarm()
             CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
             /** Must be executed after the user picturing right image */
-
-            startActivity(Intent(this, MainActivity::class.java))
         }
 
         binding.recyclerView.adapter = adapter
@@ -136,7 +135,13 @@ class HomeActivity : AppCompatActivity() {
         picker.show(supportFragmentManager, "TAG")
 
         /* Ok TimePicker */
-        picker.addOnPositiveButtonClickListener { updateAlarm(picker,alarmId, isEnabled) }
+        picker.addOnPositiveButtonClickListener {
+            updateAlarm(picker,alarmId, isEnabled)
+            if(isEnabled){
+                disableAlarm(Alarm("$hr:$min",isEnabled))
+                enableAlarm(Alarm("${picker.hour}:${picker.minute}",isEnabled))
+            }
+        }
 
         /* Cancel TimePicker */
         picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }

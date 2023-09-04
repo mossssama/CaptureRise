@@ -1,4 +1,4 @@
-package com.newOs.captureRise
+package com.newOs.captureRise.ui
 
 import android.Manifest
 import android.content.Context
@@ -10,8 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-
-private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
+import com.newOs.captureRise.R
 
 /** The sole purpose of this fragment is to request permissions and, once granted, display the camera fragment to the user. */
 class PermissionsFragment : Fragment() {
@@ -40,6 +39,8 @@ class PermissionsFragment : Fragment() {
     }
 
     companion object {
+        private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
+
         /** Convenience method used to check if all permissions required by this app are granted */
         fun hasPermissions(context: Context) = PERMISSIONS_REQUIRED.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
     }

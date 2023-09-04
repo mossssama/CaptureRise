@@ -1,4 +1,4 @@
-package com.newOs.captureRise
+package com.newOs.captureRise.ui
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -16,6 +16,7 @@ import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
+import com.newOs.captureRise.R
 import com.newOs.captureRise.databinding.FragmentCameraBinding
 import com.newOs.captureRise.objectDetector.ObjectDetectorHelper
 import org.tensorflow.lite.task.gms.vision.detector.Detection
@@ -42,8 +43,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     override fun onResume() {
         super.onResume()
         if (!PermissionsFragment.hasPermissions(requireContext())) {
-            Navigation.findNavController(requireActivity(), R.id.fragment_container)
-                .navigate(CameraFragmentDirections.actionCameraToPermissions())
+            Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(CameraFragmentDirections.actionCameraToPermissions())
         }
     }
 
@@ -136,9 +136,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                     updateControlsUi()
                 }
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    /* no op */
-                }
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
 
         // When clicked, change the underlying model used for object detection
@@ -150,9 +148,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                     updateControlsUi()
                 }
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    /* no op */
-                }
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
     }
 

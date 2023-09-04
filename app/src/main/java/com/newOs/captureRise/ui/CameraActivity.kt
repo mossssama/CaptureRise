@@ -5,19 +5,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.newOs.captureRise.R
-import com.newOs.captureRise.databinding.ActivityMainBinding
+import com.newOs.captureRise.databinding.ActivityCameraBinding
 
-class MainActivity : AppCompatActivity() {
+class CameraActivity : AppCompatActivity() {
 
-    private lateinit var activityMainBinding: ActivityMainBinding
+    private lateinit var activityCameraBinding: ActivityCameraBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        activityCameraBinding = DataBindingUtil.setContentView(this, R.layout.activity_camera)
     }
 
     override fun onBackPressed() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) { finishAfterTransition() }
         else { super.onBackPressed() }
     }
+
 }

@@ -3,7 +3,7 @@ package com.newOs.captureRise.receivers
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.newOs.captureRise.DataStoreManager
+import com.newOs.captureRise.dataStore.DataStoreManager
 import com.newOs.captureRise.managers.MyAlarmManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

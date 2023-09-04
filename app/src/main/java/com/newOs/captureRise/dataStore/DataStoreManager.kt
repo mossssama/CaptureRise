@@ -1,4 +1,4 @@
-package com.newOs.captureRise
+package com.newOs.captureRise.dataStore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -44,4 +44,5 @@ class DataStoreManager private constructor(private val context: Context) {
             INSTANCE ?: DataStoreManager(context).also { INSTANCE = it }
         }
     }
+
 }

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/cameraFragment"
-        android:name="com.newOs.captureRise.CameraFragment"
+        android:name="com.newOs.captureRise.ui.CameraFragment"
         android:label="fragment_camera"
         tools:layout="@layout/fragment_camera" >
         <action
@@ -16,9 +16,10 @@
             app:popUpTo="@id/cameraFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/permissionsFragment"
-        android:name="com.newOs.captureRise.PermissionsFragment"
+        android:name="com.newOs.captureRise.ui.PermissionsFragment"
         android:label="PermissionsFragment" >
         <action
             android:id="@+id/action_permissions_to_camera"
@@ -26,4 +27,5 @@
             app:popUpTo="@id/permissionsFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
 </navigation>
