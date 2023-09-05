@@ -15,20 +15,11 @@ class CameraActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val activityCameraBinding: ActivityCameraBinding = DataBindingUtil.setContentView(this, R.layout.activity_camera)
-        val dataStoreManager = DataStoreManager.getInstance(this)
-
-//        lifecycleScope.launch {
-//            dataStoreManager.isAlarmOn.collect { isAlarmOn ->
-//                if(!isAlarmOn){ finish() }
-//            }
-//        }
-//    }
     }
+
         override fun onBackPressed() {
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                finishAfterTransition()
-            } else {
-                super.onBackPressed()
-            }
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) finishAfterTransition()
+            else super.onBackPressed()
         }
+
     }

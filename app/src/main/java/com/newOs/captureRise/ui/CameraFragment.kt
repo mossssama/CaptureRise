@@ -168,17 +168,17 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             }
         }
 
-        // When clicked, change the underlying hardware used for inference. Current options are CPU, GPU, and NNAPI
-        fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.setSelection(0, false)
-        fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    objectDetectorHelper.currentDelegate = p2
-                    updateControlsUi()
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
-            }
+//        // When clicked, change the underlying hardware used for inference. Current options are CPU, GPU, and NNAPI
+//        fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.setSelection(0, false)
+//        fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.onItemSelectedListener =
+//            object : AdapterView.OnItemSelectedListener {
+//                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+//                    objectDetectorHelper.currentDelegate = p2
+//                    updateControlsUi()
+//                }
+//
+//                override fun onNothingSelected(p0: AdapterView<*>?) {}
+//            }
 
         // When clicked, change the underlying model used for object detection
         fragmentCameraBinding.bottomSheetLayout.spinnerModel.setSelection(0, false)

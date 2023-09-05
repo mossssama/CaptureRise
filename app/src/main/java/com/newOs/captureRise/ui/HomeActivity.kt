@@ -137,11 +137,6 @@ class HomeActivity : AppCompatActivity() {
 
 
 
-
-
-
-
-
     private fun enableAlarm(item: Alarm) {
         val calendar = Calendar.getInstance()
         val alarmTime = convertAlarmToSimplifiedFormat(item.alarmTime)
@@ -173,7 +168,6 @@ class HomeActivity : AppCompatActivity() {
         val alarmTime = convertAlarmToFullTimeFormat("${picker.hour}:${picker.minute}")
         GlobalScope.launch(Dispatchers.IO) { dao.insertAlarm(Alarm(alarmTime, false)) }
     }
-
 
 
     private fun disableAlarm(item: Alarm) {
