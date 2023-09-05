@@ -36,22 +36,38 @@
             android:layout_marginTop="@dimen/bottom_sheet_default_row_margin">
 
             <TextView
-                android:text="Capture the following"
-                android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:text="Capture a"
+                android:textColor="@color/bottom_sheet_text_color"
                 android:textSize="@dimen/bottom_sheet_text_size"
-                android:textColor="@color/bottom_sheet_text_color" />
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_toBeCaptured"
-                android:hint=""
-                android:textSize="@dimen/bottom_sheet_text_size"
-                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:minWidth="@dimen/bottom_sheet_spinner_delegate_min_width" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:hint=""
+                android:minWidth="@dimen/bottom_sheet_spinner_delegate_min_width"
+                android:textColor="@color/black"
+                android:textSize="@dimen/bottom_sheet_text_size" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/refresh"
+                android:layout_width="@dimen/bottom_sheet_control_btn_size"
+                android:layout_height="@dimen/bottom_sheet_control_btn_size"
+                android:contentDescription="Another image"
+                android:src="@drawable/refresh_icon" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
@@ -91,10 +107,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_confidence_threshold"
                 android:layout_centerVertical="true"
-                android:textSize="@dimen/bottom_sheet_text_size"
-                android:textColor="@color/bottom_sheet_text_color" />
+                android:text="@string/label_confidence_threshold"
+                android:textColor="@color/bottom_sheet_text_color"
+                android:textSize="@dimen/bottom_sheet_text_size" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

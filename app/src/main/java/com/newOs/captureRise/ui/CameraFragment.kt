@@ -69,8 +69,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         val dataStoreManager = DataStoreManager.getInstance(requireContext())
 
         /* Set the desired image */
-        val desiredObject = ImageUtils.myStringList[ImageUtils.generateRandomNumberExc(ImageUtils.myStringList.size)]
-        CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setDesiredObject(desiredObject) }
+        setDesiredObject(dataStoreManager, getRandomObject())
+        fragmentCameraBinding.bottomSheetLayout.refresh.setOnClickListener { setDesiredObject(dataStoreManager, getRandomObject()) }
 
         /* Update the desired image */
         lifecycleScope.launch {
@@ -86,6 +86,16 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
         return fragmentCameraBinding.root
     }
+
+    private fun setDesiredObject(
+        dataStoreManager: DataStoreManager,
+        desiredObject: String
+    ) {
+        CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setDesiredObject(desiredObject) }
+    }
+
+    private fun getRandomObject() =
+        ImageUtils.myStringList[ImageUtils.generateRandomNumberExc(ImageUtils.myStringList.size)]
 
     private fun returnToHomeActivity() {
         val fragmentManager = requireActivity().supportFragmentManager
