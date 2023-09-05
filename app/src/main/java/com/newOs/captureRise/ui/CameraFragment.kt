@@ -74,7 +74,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         /* Return if the user pictured the desired object */
         lifecycleScope.launch {
             dataStoreManager.isAlarmOn.collect { isAlarmOn ->
-                if(!isAlarmOn) returnToHomeActivity()
+                if(!isAlarmOn) { returnToHomeActivity(); Toast.makeText(context,"Alarm closed successfully",Toast.LENGTH_LONG).show() }
             }
         }
 

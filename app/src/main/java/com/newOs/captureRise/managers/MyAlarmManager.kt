@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.widget.Toast
 import com.newOs.captureRise.dataStore.DataStoreManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -72,7 +73,7 @@ object MyAlarmManager {
     private fun stopVibration() {
         vibrator?.cancel()
     }
-    
+
     private fun cancelWakeLock() {
         try {
             if (wakeLock?.isHeld == true) wakeLock?.release()

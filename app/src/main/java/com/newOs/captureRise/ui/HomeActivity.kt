@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -72,7 +71,6 @@ class HomeActivity : AppCompatActivity() {
                 )
             },
             onSwitchToggleListener = { item, isChecked ->
-                Log.i("OsOs", "${item.id}    -     ${item.alarmTime}    -    ${item.isEnabled}")
                 updateAlarmStatus(item.id, convertAlarmToSimplifiedFormat(item.alarmTime), isChecked)
                 if (isChecked) enableAlarm(item)
                 else disableAlarm(item)
@@ -98,16 +96,7 @@ class HomeActivity : AppCompatActivity() {
         val picker = buildMaterialTimePicker(clockFormat, hr, min, "Set Alarm")
 
         picker.show(supportFragmentManager, "TAG")
-
-        /* Ok TimePicker */
         picker.addOnPositiveButtonClickListener { insertAlarm(picker) }
-
-//        /* Cancel TimePicker */
-//        picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }
-//        /* Out TimePicker */
-//        picker.addOnCancelListener { Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show() }
-//        /* Ok + Cancel + Out TimePicker */
-//        picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
     }
 
 
@@ -118,7 +107,6 @@ class HomeActivity : AppCompatActivity() {
 
         picker.show(supportFragmentManager, "TAG")
 
-        /* Ok TimePicker */
         picker.addOnPositiveButtonClickListener {
             updateAlarm(picker,alarmId, isEnabled)
             if(isEnabled){
@@ -127,14 +115,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-//        /* Cancel TimePicker */
-//        picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }
-//        /* Out TimePicker */
-//        picker.addOnCancelListener { Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show() }
-//        /* Ok + Cancel + Out TimePicker */
-//        picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
     }
-
 
 
     private fun enableAlarm(item: Alarm) {

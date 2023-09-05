@@ -7,6 +7,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.newOs.captureRise.R
 
 class NotificationsUtils {
 
@@ -21,7 +22,7 @@ class NotificationsUtils {
             val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(title)
                 .setSound(soundUri)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

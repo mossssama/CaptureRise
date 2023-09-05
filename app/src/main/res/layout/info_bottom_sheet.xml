@@ -124,9 +124,10 @@
         </RelativeLayout>
 
         <!-- ML max results adjustment row -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_marginTop="@dimen/bottom_sheet_default_row_margin"
             android:gravity="center"
             android:orientation="horizontal">
@@ -169,7 +170,7 @@
                     android:contentDescription="@string/alt_bottom_sheet_max_results_button_plus"
                     android:src="@drawable/ic_plus" />
             </LinearLayout>
-        </RelativeLayout>
+        </LinearLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.core.widget.NestedScrollView>

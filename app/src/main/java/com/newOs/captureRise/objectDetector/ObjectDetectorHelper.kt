@@ -30,10 +30,9 @@ class ObjectDetectorHelper(
     val context: Context,
     val objectDetectorListener: DetectorListener
 ) {
-
     private val TAG = "ObjectDetectionHelper"
 
-    // For this example this needs to be a var so it can be reset on changes. If the ObjectDetector will not change, a lazy val would be preferable.
+    // It is Var so it can be reset on changes. If the ObjectDetector will not change, a lazy val would be preferable.
     private var objectDetector: ObjectDetector? = null
 
     init {
@@ -46,6 +45,7 @@ class ObjectDetectorHelper(
         }.addOnFailureListener{
             objectDetectorListener.onError("TfLiteVision failed to initialize: " + it.message)
         }
+        MyAlarmManager.initialize(context)
     }
 
     fun clearObjectDetector() {
@@ -79,49 +79,36 @@ class ObjectDetectorHelper(
 
         if (objectDetector == null) { setupObjectDetector() }
 
-//        var inferenceTime = SystemClock.uptimeMillis()                                                  // Inference time is the difference between the system time at the start and finish of the process
+//      var inferenceTime = SystemClock.uptimeMillis()                                                  // Inference time is the difference between the system time at the start and finish of the process
 
-        val imageProcessor = ImageProcessor.Builder().add(Rot90Op(-imageRotation / 90)).build()             // Create preprocessor for the image.
-
-        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))                         // Preprocess the image and convert it into a TensorImage for detection.
+        val imageProcessor = ImageProcessor.Builder().add(Rot90Op(-imageRotation / 90)).build()          // Create preprocessor for the image.
+        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))                             // Preprocess the image and convert it into a TensorImage for detection.
 
         val results = objectDetector?.detect(tensorImage)
         val dataStoreManager = DataStoreManager.getInstance(context)
 
         if (results != null && results.isNotEmpty()) {
             val detectedObjectNames = mutableListOf<String>()
-
             for (result in results) getDetectedObjectNames(result, detectedObjectNames)                 // Extract object labels from detection results
-
-            val detectedObjectNamesString = detectedObjectNames.joinToString(", ")                          // Show a toast with the detected object names
 
             GlobalScope.launch {
                 dataStoreManager.desiredObject.collect { desiredObj ->
                     if(ImageUtils.isStringExists(detectedObjectNames,desiredObj)){
-                        MyAlarmManager.initialize(context)
-                        MyAlarmManager.stopAlarm()
-                        CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
-//                        Toast.makeText(context,"Alarm is closed successfully",Toast.LENGTH_LONG).show()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStoreManager.setIsAlarmOn(false)
+                            MyAlarmManager.stopAlarm()
+                        }
                     }
                 }
             }
 
-            Log.d("OsOs", "Detected Objects: $detectedObjectNamesString")
+            Log.d("OsOs", "Detected Objects: ${getObjectsInConcatenatedString(detectedObjectNames)}")
         } else {
             Log.d("OsOs", "No objects detected")
         }
 
-//        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+//      inferenceTime = SystemClock.uptimeMillis() - inferenceTime
         objectDetectorListener.onResults(results, tensorImage.height, tensorImage.width)
-    }
-
-    private fun getDetectedObjectNames(
-        result: Detection,
-        detectedObjectNames: MutableList<String>
-    ) {
-        for (category in result.categories) {
-            detectedObjectNames.add(category.label)
-        }
     }
 
     interface DetectorListener {
@@ -133,5 +120,16 @@ class ObjectDetectorHelper(
           imageWidth: Int
         )
     }
+
+    private fun getDetectedObjectNames(
+        result: Detection,
+        detectedObjectNames: MutableList<String>
+    ) {
+        for (category in result.categories) {
+            detectedObjectNames.add(category.label)
+        }
+    }
+
+    private fun getObjectsInConcatenatedString(detectedObjectNames: MutableList<String>) = detectedObjectNames.joinToString(", ")
 
 }

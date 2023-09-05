@@ -12,6 +12,5 @@
 
     <string name="label_fps">Frames per Second</string>
     <string name="label_confidence_threshold">Accuracy</string>
-    <string name="label_max_results">Max Scanned Objects</string>
-
+    <string name="label_max_results">Scanned Objects</string>
 </resources>

@@ -16,14 +16,18 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val dataStoreManager = DataStoreManager.getInstance(context)
 
-        // Launch a coroutine to set the alarm state
         CoroutineScope(Dispatchers.IO).launch {
             dataStoreManager.setIsAlarmOn(true)
             MyAlarmManager.initialize(context)
             MyAlarmManager.startAlarm()
         }
 
-        NotificationsUtils.launchNotification(context, title = "Alarm at ${ intent.extras?.getString(AlarmUtils.Extras.HOURS) }:${ intent.extras?.getString(AlarmUtils.Extras.MINUTES) } !")
+        val hours = addPreZeroIfNeeded(intent.extras?.getString(AlarmUtils.Extras.HOURS).toString())
+        val minutes = addPreZeroIfNeeded(intent.extras?.getString(AlarmUtils.Extras.MINUTES).toString())
+        NotificationsUtils.launchNotification(context, title = "Alarm at $hours:$minutes !")
 
     }
+
+    private fun addPreZeroIfNeeded(input: String): String = if (input.length == 1 && input.toInt() >= 0 && input.toInt() <= 9) "0$input" else input
+
 }
