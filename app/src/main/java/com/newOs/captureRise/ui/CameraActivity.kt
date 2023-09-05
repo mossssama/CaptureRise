@@ -14,8 +14,7 @@ class CameraActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val activityCameraBinding: ActivityCameraBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_camera)
+        val activityCameraBinding: ActivityCameraBinding = DataBindingUtil.setContentView(this, R.layout.activity_camera)
         val dataStoreManager = DataStoreManager.getInstance(this)
 
 //        lifecycleScope.launch {

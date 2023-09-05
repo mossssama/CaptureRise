@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.newOs.captureRise.R
 import com.newOs.captureRise.room.Alarm
+import com.newOs.captureRise.utils.ParseUtils
 
 class RecyclerViewAdapter(
     private var alarmsList: List<Alarm>,

@@ -26,6 +26,8 @@ import com.newOs.captureRise.R
 import com.newOs.captureRise.databinding.ActivityHomeBinding
 import com.newOs.captureRise.managers.MyAlarmManager
 import com.newOs.captureRise.utils.AlarmUtils
+import com.newOs.captureRise.utils.ParseUtils.Companion.convertAlarmToFullTimeFormat
+import com.newOs.captureRise.utils.ParseUtils.Companion.convertAlarmToSimplifiedFormat
 import com.newOs.captureRise.utils.ParseUtils.Companion.convertTimeStringToInt
 import com.newOs.captureRise.utils.ParseUtils.Companion.splitAlarmTime
 import java.util.*
@@ -71,7 +73,7 @@ class HomeActivity : AppCompatActivity() {
             },
             onSwitchToggleListener = { item, isChecked ->
                 Log.i("OsOs", "${item.id}    -     ${item.alarmTime}    -    ${item.isEnabled}")
-                updateAlarmStatus(item.id, item.alarmTime, isChecked)
+                updateAlarmStatus(item.id, convertAlarmToSimplifiedFormat(item.alarmTime), isChecked)
                 if (isChecked) enableAlarm(item)
                 else disableAlarm(item)
             }
@@ -88,26 +90,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun enableAlarm(item: Alarm) {
-        val calendar = Calendar.getInstance()
-        AlarmUtils.setAlarmCalendar(
-            calendar,
-            splitAlarmTime(item)[0].toInt(),
-            splitAlarmTime(item)[1].toInt(),
-            0
-        )
-        AlarmUtils.enableAlarm(
-            this,
-            calendar,
-            splitAlarmTime(item)[0],
-            splitAlarmTime(item)[1],
-            convertTimeStringToInt(item.alarmTime)
-        )
-    }
 
-    private fun disableAlarm(item: Alarm) {
-        AlarmUtils.disableAlarm(this, convertTimeStringToInt(item.alarmTime))
-    }
 
     private fun openTimePickerForAdd(hr: Int, min: Int) {
         val isSystem24Hour = is24HourFormat(this)
@@ -152,27 +135,60 @@ class HomeActivity : AppCompatActivity() {
         picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
     }
 
-    private fun buildMaterialTimePicker(clockFormat: Int, hr: Int, min: Int, title: String) =
-        MaterialTimePicker.Builder().setTimeFormat(clockFormat).setHour(hr).setMinute(min).setTheme(R.style.TimePicker).setTitleText(title).build()
 
-    private fun observeAlarms() {
-        dao.getAllAlarmsLiveData().observe(this@HomeActivity, Observer { alarms -> alarms?.let { adapter.updateData(alarms) } })
+
+
+
+
+
+
+    private fun enableAlarm(item: Alarm) {
+        val calendar = Calendar.getInstance()
+        val alarmTime = convertAlarmToSimplifiedFormat(item.alarmTime)
+        AlarmUtils.setAlarmCalendar(
+            calendar,
+            splitAlarmTime(alarmTime)[0].toInt(),
+            splitAlarmTime(alarmTime)[1].toInt(),
+            0
+        )
+        AlarmUtils.enableAlarm(
+            this,
+            calendar,
+            splitAlarmTime(alarmTime)[0],
+            splitAlarmTime(alarmTime)[1],
+            convertTimeStringToInt(convertAlarmToFullTimeFormat(item.alarmTime))
+        )
     }
 
     private fun updateAlarmStatus(id: Int,alarmTime:String, isChecked: Boolean) {
-        GlobalScope.launch(Dispatchers.IO) { dao.updateAlarm(id,alarmTime, isChecked) }
+        GlobalScope.launch(Dispatchers.IO) { dao.updateAlarm(id, convertAlarmToFullTimeFormat(alarmTime), isChecked) }
     }
 
     private fun updateAlarm(picker: MaterialTimePicker,alarmId:Int,isEnabled: Boolean) {
-        GlobalScope.launch(Dispatchers.IO) { dao.updateAlarm(alarmId,"${picker.hour}:${picker.minute}", isEnabled) }
+        val alarmTime = convertAlarmToFullTimeFormat("${picker.hour}:${picker.minute}")
+        GlobalScope.launch(Dispatchers.IO) { dao.updateAlarm(alarmId,alarmTime, isEnabled) }
     }
+
+    private fun insertAlarm(picker: MaterialTimePicker) {
+        val alarmTime = convertAlarmToFullTimeFormat("${picker.hour}:${picker.minute}")
+        GlobalScope.launch(Dispatchers.IO) { dao.insertAlarm(Alarm(alarmTime, false)) }
+    }
+
+
+
+    private fun disableAlarm(item: Alarm) {
+        AlarmUtils.disableAlarm(this, convertTimeStringToInt(convertAlarmToFullTimeFormat(item.alarmTime)))
+    }
+
+    private fun buildMaterialTimePicker(clockFormat: Int, hr: Int, min: Int, title: String) =
+        MaterialTimePicker.Builder().setTimeFormat(clockFormat).setHour(hr).setMinute(min).setTheme(R.style.TimePicker).setTitleText(title).build()
 
     private fun deleteAlarm(item: Alarm) {
         GlobalScope.launch(Dispatchers.IO) { dao.deleteAlarm(item.id) }
     }
 
-    private fun insertAlarm(picker: MaterialTimePicker) {
-        GlobalScope.launch(Dispatchers.IO) { dao.insertAlarm(Alarm("${picker.hour}:${picker.minute}", false)) }
+    private fun observeAlarms() {
+        dao.getAllAlarmsLiveData().observe(this@HomeActivity, Observer { alarms -> alarms?.let { adapter.updateData(alarms) } })
     }
 
 }
