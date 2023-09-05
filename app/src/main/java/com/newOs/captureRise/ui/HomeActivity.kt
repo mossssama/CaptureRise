@@ -102,12 +102,12 @@ class HomeActivity : AppCompatActivity() {
         /* Ok TimePicker */
         picker.addOnPositiveButtonClickListener { insertAlarm(picker) }
 
-        /* Cancel TimePicker */
-        picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }
-        /* Out TimePicker */
-        picker.addOnCancelListener { Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show() }
-        /* Ok + Cancel + Out TimePicker */
-        picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
+//        /* Cancel TimePicker */
+//        picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }
+//        /* Out TimePicker */
+//        picker.addOnCancelListener { Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show() }
+//        /* Ok + Cancel + Out TimePicker */
+//        picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
     }
 
 
@@ -127,12 +127,12 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        /* Cancel TimePicker */
-        picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }
-        /* Out TimePicker */
-        picker.addOnCancelListener { Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show() }
-        /* Ok + Cancel + Out TimePicker */
-        picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
+//        /* Cancel TimePicker */
+//        picker.addOnNegativeButtonClickListener { Toast.makeText(this, "Negative", Toast.LENGTH_SHORT).show() }
+//        /* Out TimePicker */
+//        picker.addOnCancelListener { Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show() }
+//        /* Ok + Cancel + Out TimePicker */
+//        picker.addOnDismissListener { Toast.makeText(this, "Dismiss", Toast.LENGTH_SHORT).show() }
     }
 
 

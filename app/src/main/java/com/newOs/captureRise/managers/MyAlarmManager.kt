@@ -8,6 +8,10 @@ import android.os.Build
 import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
+import com.newOs.captureRise.dataStore.DataStoreManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.ref.WeakReference
 
 object MyAlarmManager {
@@ -15,13 +19,14 @@ object MyAlarmManager {
     private var ringtone: Ringtone? = null
     private var vibrator: Vibrator? = null
     private var wakeLock: PowerManager.WakeLock? = null
+    private var dataStoreManager: DataStoreManager? =null
 
     fun initialize(context: Context) {
         contextRef = WeakReference(context.applicationContext)
+        dataStoreManager = DataStoreManager.getInstance(context)
     }
 
     private fun getContext(): Context? = contextRef?.get()
-
 
     fun startAlarm() {
         val context = getContext()
@@ -67,8 +72,12 @@ object MyAlarmManager {
     private fun stopVibration() {
         vibrator?.cancel()
     }
-
+    
     private fun cancelWakeLock() {
-        if(wakeLock!!.isHeld) wakeLock?.release()
+        try {
+            if (wakeLock?.isHeld == true) wakeLock?.release()
+        } catch (e: Exception) {
+            CoroutineScope(Dispatchers.IO).launch { dataStoreManager?.setIsAlarmOn(false) }
+        }
     }
 }

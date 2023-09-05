@@ -9,7 +9,6 @@ class ParseUtils {
 
         fun splitAlarmTime(alarmTime: String) = alarmTime.split(":")
 
-
         fun convertTimeStringToInt(timeStr: String): Int = timeStr.replace(":", "").toInt()
 
         fun convertAlarmToFullTimeFormat(inputTime: String): String {

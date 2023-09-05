@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
@@ -43,21 +42,16 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
 
-    /** Blocking camera operations are performed using this executor */
-    private lateinit var cameraExecutor: ExecutorService
+    private lateinit var cameraExecutor: ExecutorService                /** Blocking camera operations are performed using this executor */
 
     override fun onResume() {
         super.onResume()
-        if (!PermissionsFragment.hasPermissions(requireContext())) {
-            Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(CameraFragmentDirections.actionCameraToPermissions())
-        }
+        if (!PermissionsFragment.hasPermissions(requireContext())) { Navigation.findNavController(requireActivity(), R.id.fragment_container).navigate(CameraFragmentDirections.actionCameraToPermissions()) }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        // Shut down our background executor
-        cameraExecutor.shutdown()
+        cameraExecutor.shutdown()                   // Shut down our background executor
     }
 
     override fun onCreateView(
@@ -94,8 +88,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setDesiredObject(desiredObject) }
     }
 
-    private fun getRandomObject() =
-        ImageUtils.myStringList[ImageUtils.generateRandomNumberExc(ImageUtils.myStringList.size)]
+    private fun getRandomObject() = ImageUtils.myStringList[ImageUtils.generateRandomNumberExc(ImageUtils.myStringList.size)]
 
     private fun returnToHomeActivity() {
         val fragmentManager = requireActivity().supportFragmentManager
@@ -152,53 +145,12 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             }
         }
 
-        // When clicked, decrease the number of threads used for detection
-        fragmentCameraBinding.bottomSheetLayout.threadsMinus.setOnClickListener {
-            if (objectDetectorHelper.numThreads > 1) {
-                objectDetectorHelper.numThreads--
-                updateControlsUi()
-            }
-        }
-
-        // When clicked, increase the number of threads used for detection
-        fragmentCameraBinding.bottomSheetLayout.threadsPlus.setOnClickListener {
-            if (objectDetectorHelper.numThreads < 4) {
-                objectDetectorHelper.numThreads++
-                updateControlsUi()
-            }
-        }
-
-//        // When clicked, change the underlying hardware used for inference. Current options are CPU, GPU, and NNAPI
-//        fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.setSelection(0, false)
-//        fragmentCameraBinding.bottomSheetLayout.spinnerDelegate.onItemSelectedListener =
-//            object : AdapterView.OnItemSelectedListener {
-//                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//                    objectDetectorHelper.currentDelegate = p2
-//                    updateControlsUi()
-//                }
-//
-//                override fun onNothingSelected(p0: AdapterView<*>?) {}
-//            }
-
-        // When clicked, change the underlying model used for object detection
-        fragmentCameraBinding.bottomSheetLayout.spinnerModel.setSelection(0, false)
-        fragmentCameraBinding.bottomSheetLayout.spinnerModel.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    objectDetectorHelper.currentModel = p2
-                    updateControlsUi()
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {}
-            }
     }
 
     // Update the values displayed in the bottom sheet. Reset detector.
     private fun updateControlsUi() {
         fragmentCameraBinding.bottomSheetLayout.maxResultsValue.text = objectDetectorHelper.maxResults.toString()
-        fragmentCameraBinding.bottomSheetLayout.thresholdValue.text =
-            String.format("%.2f", objectDetectorHelper.threshold)
-        fragmentCameraBinding.bottomSheetLayout.threadsValue.text = objectDetectorHelper.numThreads.toString()
+        fragmentCameraBinding.bottomSheetLayout.thresholdValue.text = String.format("%.2f", objectDetectorHelper.threshold)
 
         // Needs to be cleared instead of reinitialized because the GPU delegate needs to be initialized on the thread using it when applicable
         objectDetectorHelper.clearObjectDetector()
@@ -219,8 +171,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     // Declare and bind preview, capture and analysis use cases
     @SuppressLint("UnsafeOptInUsageError")
     private fun bindCameraUseCases() {
-        val cameraProvider = cameraProvider
-            ?: throw IllegalStateException("Camera initialization failed.") // CameraProvider
+        val cameraProvider = cameraProvider ?: throw IllegalStateException("Camera initialization failed.") // CameraProvider
         val cameraSelector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build() // CameraSelector - makes assumption that we're only using the back camera
 
         // Preview. Only using the 4:3 ratio because this is the closest to our models
@@ -277,13 +228,10 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     // Update UI after objects have been detected. Extracts original image height/width to scale and place bounding boxes properly through OverlayView
     override fun onResults(
         results: MutableList<Detection>?,
-        inferenceTime: Long,
         imageHeight: Int,
         imageWidth: Int
     ) {
         activity?.runOnUiThread {
-            fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text =
-                String.format("%d ms", inferenceTime)
             fragmentCameraBinding.overlay.setResults(
                 results ?: LinkedList<Detection>(),
                 imageHeight,
@@ -301,11 +249,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     override fun onInitialized() {
         objectDetectorHelper.setupObjectDetector()
-        cameraExecutor = Executors.newSingleThreadExecutor()
-        // Initialize our background executor
+        cameraExecutor = Executors.newSingleThreadExecutor()                // Initialize our background executor
 
         fragmentCameraBinding.viewFinder.post { setUpCamera() }
-        // Wait for the views to be properly laid out
-        fragmentCameraBinding.progressCircular.visibility = View.GONE
+        fragmentCameraBinding.progressCircular.visibility = View.GONE       // Wait for the views to be properly laid out
     }
 }

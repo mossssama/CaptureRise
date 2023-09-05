@@ -27,7 +27,6 @@ class AlarmUtils {
             val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else 0
             val pendingIntent = PendingIntent.getBroadcast(context, alarmCode, intent, flags)
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-
         }
 
         fun disableAlarm(context: Context, alarmCode: Int) {

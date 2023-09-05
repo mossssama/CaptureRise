@@ -4,11 +4,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.lifecycleScope
 import com.newOs.captureRise.R
-import com.newOs.captureRise.dataStore.DataStoreManager
 import com.newOs.captureRise.databinding.ActivityCameraBinding
-import kotlinx.coroutines.launch
 
 class CameraActivity : AppCompatActivity() {
 

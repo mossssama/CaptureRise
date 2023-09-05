@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import com.newOs.captureRise.dataStore.DataStoreManager
 import com.newOs.captureRise.managers.MyAlarmManager
+import com.newOs.captureRise.utils.AlarmUtils
+import com.newOs.captureRise.utils.NotificationsUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +23,7 @@ class AlarmReceiver : BroadcastReceiver() {
             MyAlarmManager.startAlarm()
         }
 
-//        NotificationsUtils.launchNotification(context, title = "Alarm at ${ intent.extras?.getString(AlarmUtils.Extras.HOURS) }:${ intent.extras?.getString(AlarmUtils.Extras.MINUTES) } !")
+        NotificationsUtils.launchNotification(context, title = "Alarm at ${ intent.extras?.getString(AlarmUtils.Extras.HOURS) }:${ intent.extras?.getString(AlarmUtils.Extras.MINUTES) } !")
 
     }
 }

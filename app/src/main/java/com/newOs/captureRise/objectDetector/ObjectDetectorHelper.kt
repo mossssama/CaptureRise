@@ -2,8 +2,8 @@ package com.newOs.captureRise.objectDetector
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.os.SystemClock
 import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.tflite.client.TfLiteInitializationOptions
 import com.google.android.gms.tflite.gpu.support.TfLiteGpu
 import com.newOs.captureRise.dataStore.DataStoreManager
@@ -21,15 +21,15 @@ import org.tensorflow.lite.task.gms.vision.TfLiteVision
 import org.tensorflow.lite.task.gms.vision.detector.Detection
 import org.tensorflow.lite.task.gms.vision.detector.ObjectDetector
 
+/* numThreads=[1,4]*/
 class ObjectDetectorHelper(
     var threshold: Float = 0.5f,
-    var numThreads: Int = 2,
+    private var numThreads: Int = 4,
+    private var modelName: String = "efficientdet-lite2.tflite",
     var maxResults: Int = 3,
-    var currentModel: Int = 0,
     val context: Context,
     val objectDetectorListener: DetectorListener
 ) {
-
 
     private val TAG = "ObjectDetectionHelper"
 
@@ -52,30 +52,16 @@ class ObjectDetectorHelper(
         objectDetector = null
     }
 
-    // Initialize the object detector using current settings on the thread that is using it. CPU and NNAPI delegates can be used with detectors
-    // that are created on the main thread and used on a background thread, but the GPU delegate needs to be used on the thread that initialized the detector
+    // Initialize the object detector using current settings on the thread that is using it. CPU is used with detectors that are created on the main thread and used on a background thread
     fun setupObjectDetector() {
         if (!TfLiteVision.isInitialized()) {
             Log.e(TAG, "setupObjectDetector: TfLiteVision is not initialized yet")
             return
         }
 
-        // Create the base options for the detector using specifies max results and score threshold
-        val optionsBuilder = ObjectDetector.ObjectDetectorOptions.builder().setScoreThreshold(threshold).setMaxResults(maxResults)
-
-        // Set general detection options, including number of used threads
-        val baseOptionsBuilder = BaseOptions.builder().setNumThreads(numThreads)
-
+        val optionsBuilder = ObjectDetector.ObjectDetectorOptions.builder().setScoreThreshold(threshold).setMaxResults(maxResults)          // Create the base options for the detector using specifies max results and score threshold
+        val baseOptionsBuilder = BaseOptions.builder().setNumThreads(numThreads)                                                            // Set general detection options, including number of used threads
         optionsBuilder.setBaseOptions(baseOptionsBuilder.build())
-
-        val modelName =
-            when (currentModel) {
-                MODEL_MOBILENETV1 -> "mobilenetv1.tflite"
-                MODEL_EFFICIENTDETV0 -> "efficientdet-lite0.tflite"
-                MODEL_EFFICIENTDETV1 -> "efficientdet-lite1.tflite"
-                MODEL_EFFICIENTDETV2 -> "efficientdet-lite2.tflite"
-                else -> "mobilenetv1.tflite"
-            }
 
         try {
             objectDetector = ObjectDetector.createFromFileAndOptions(context, modelName, optionsBuilder.build())
@@ -93,11 +79,11 @@ class ObjectDetectorHelper(
 
         if (objectDetector == null) { setupObjectDetector() }
 
-        var inferenceTime = SystemClock.uptimeMillis()                  // Inference time is the difference between the system time at the start and finish of the process
+//        var inferenceTime = SystemClock.uptimeMillis()                                                  // Inference time is the difference between the system time at the start and finish of the process
 
         val imageProcessor = ImageProcessor.Builder().add(Rot90Op(-imageRotation / 90)).build()             // Create preprocessor for the image.
 
-        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))                     // Preprocess the image and convert it into a TensorImage for detection.
+        val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))                         // Preprocess the image and convert it into a TensorImage for detection.
 
         val results = objectDetector?.detect(tensorImage)
         val dataStoreManager = DataStoreManager.getInstance(context)
@@ -115,6 +101,7 @@ class ObjectDetectorHelper(
                         MyAlarmManager.initialize(context)
                         MyAlarmManager.stopAlarm()
                         CoroutineScope(Dispatchers.IO).launch { dataStoreManager.setIsAlarmOn(false) }
+//                        Toast.makeText(context,"Alarm is closed successfully",Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -124,9 +111,8 @@ class ObjectDetectorHelper(
             Log.d("OsOs", "No objects detected")
         }
 
-
-        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-        objectDetectorListener.onResults(results, inferenceTime, tensorImage.height, tensorImage.width)
+//        inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+        objectDetectorListener.onResults(results, tensorImage.height, tensorImage.width)
     }
 
     private fun getDetectedObjectNames(
@@ -143,17 +129,9 @@ class ObjectDetectorHelper(
         fun onError(error: String)
         fun onResults(
           results: MutableList<Detection>?,
-          inferenceTime: Long,
           imageHeight: Int,
           imageWidth: Int
         )
-    }
-
-    companion object {
-        const val MODEL_MOBILENETV1 = 0
-        const val MODEL_EFFICIENTDETV0 = 1
-        const val MODEL_EFFICIENTDETV1 = 2
-        const val MODEL_EFFICIENTDETV2 = 3
     }
 
 }

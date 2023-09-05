@@ -16,7 +16,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentTop="true"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             app:backgroundTint="@color/orange"
-            app:srcCompat="@drawable/alarm_add_icon"
+            app:srcCompat="@drawable/ic_add_alarm"
             app:tint="@android:color/white"
             app:maxImageSize="40dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,7 +60,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:maxImageSize="40dp"
-            app:srcCompat="@drawable/camera_icon"
+            app:srcCompat="@drawable/ic_camera"
             app:tint="@android:color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

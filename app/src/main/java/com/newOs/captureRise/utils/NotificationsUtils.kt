@@ -16,7 +16,6 @@ class NotificationsUtils {
         private const val CHANNEL_DESCRIPTION = "alarm"
 
         fun launchNotification(context: Context, title: String) {
-
             createNotificationChannel(context)
 
             val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -42,6 +41,7 @@ class NotificationsUtils {
                 notificationManager.createNotificationChannel(channel)
             }
         }
+
     }
 
 }

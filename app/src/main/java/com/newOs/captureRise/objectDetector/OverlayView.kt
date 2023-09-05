@@ -20,9 +20,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
     private var boxPaint = Paint()
     private var textBackgroundPaint = Paint()
     private var textPaint = Paint()
-
     private var scaleFactor: Float = 1f
-
     private var bounds = Rect()
 
     init {
@@ -73,7 +71,7 @@ class OverlayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
             textBackgroundPaint.getTextBounds(drawableText, 0, drawableText.length, bounds)
             val textWidth = bounds.width()
             val textHeight = bounds.height()
-            canvas.drawRect(left, top, left + textWidth + Companion.BOUNDING_RECT_TEXT_PADDING, top + textHeight + Companion.BOUNDING_RECT_TEXT_PADDING, textBackgroundPaint)
+            canvas.drawRect(left, top, left + textWidth + BOUNDING_RECT_TEXT_PADDING, top + textHeight + BOUNDING_RECT_TEXT_PADDING, textBackgroundPaint)
 
             // Draw text for detected object
             canvas.drawText(drawableText, left, top + bounds.height(), textPaint)
