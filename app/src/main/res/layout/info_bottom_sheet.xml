@@ -135,6 +135,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:layout_centerVertical="true"
                 android:text="@string/label_max_results"
                 android:textColor="@color/bottom_sheet_text_color"
@@ -145,6 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center"
+                android:layout_margin="4dp"
                 android:orientation="horizontal">
                 <androidx.appcompat.widget.AppCompatImageButton
                     android:id="@+id/max_results_minus"

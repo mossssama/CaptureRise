@@ -115,7 +115,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private fun initBottomSheetControls() {
         // When clicked, lower detection score threshold floor
         fragmentCameraBinding.bottomSheetLayout.thresholdMinus.setOnClickListener {
-            if (objectDetectorHelper.threshold >= 0.1) {
+            if (objectDetectorHelper.threshold >= 0.4) {
                 objectDetectorHelper.threshold -= 0.1f
                 updateControlsUi()
             }

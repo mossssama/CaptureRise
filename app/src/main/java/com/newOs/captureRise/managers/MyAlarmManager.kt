@@ -39,9 +39,12 @@ object MyAlarmManager {
     }
 
     fun stopAlarm() {
-        stopRingTone()
-        stopVibration()
-        cancelWakeLock()
+        val context = getContext()
+        if (context != null) {
+            stopRingTone()
+            stopVibration()
+            cancelWakeLock()
+        }
     }
 
     private fun playPhoneDefaultRingTone(context: Context): Ringtone {
