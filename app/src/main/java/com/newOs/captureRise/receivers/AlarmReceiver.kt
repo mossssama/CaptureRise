@@ -7,9 +7,11 @@ import com.newOs.captureRise.dataStore.DataStoreManager
 import com.newOs.captureRise.managers.MyAlarmManager
 import com.newOs.captureRise.utils.AlarmUtils
 import com.newOs.captureRise.utils.NotificationsUtils
+import com.newOs.captureRise.utils.ParseUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.PasswordAuthentication
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -24,6 +26,10 @@ class AlarmReceiver : BroadcastReceiver() {
 
         val hours = addPreZeroIfNeeded(intent.extras?.getString(AlarmUtils.Extras.HOURS).toString())
         val minutes = addPreZeroIfNeeded(intent.extras?.getString(AlarmUtils.Extras.MINUTES).toString())
+
+        val time = ParseUtils.splitAlarmTime(ParseUtils.convertAlarmToSimplifiedFormat("$hours:$minutes"))
+        AlarmUtils.refreshAlarm(context,time[0],time[1],ParseUtils.convertTimeStringToInt(ParseUtils.convertAlarmToFullTimeFormat("$hours:$minutes")))
+
         NotificationsUtils.launchNotification(context, title = "Alarm at $hours:$minutes !")
 
     }

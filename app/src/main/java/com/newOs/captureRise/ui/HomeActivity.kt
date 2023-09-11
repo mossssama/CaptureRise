@@ -129,6 +129,7 @@ class HomeActivity : AppCompatActivity() {
         )
         AlarmUtils.enableAlarm(
             this,
+            calendar,
             splitAlarmTime(alarmTime)[0],
             splitAlarmTime(alarmTime)[1],
             convertTimeStringToInt(convertAlarmToFullTimeFormat(item.alarmTime))

@@ -22,7 +22,7 @@ class NotificationsUtils {
             val soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
             val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)
+                .setSmallIcon(R.drawable.ic_app)
                 .setContentTitle(title)
                 .setSound(soundUri)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

@@ -31,7 +31,23 @@ class AlarmUtils {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }
 
-        fun enableAlarm(context: Context, hour: String, minute: String, alarmCode: Int) {
+//        fun enableAlarm(context: Context, hour: String, minute: String, alarmCode: Int) {
+//            val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//            val intent = Intent(context, AlarmReceiver::class.java).apply { putExtra(HOURS, hour);  putExtra(MINUTES, minute) }
+//            val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else 0
+//            val pendingIntent = PendingIntent.getBroadcast(context, alarmCode, intent, flags)
+//
+//            val calendar = Calendar.getInstance()
+//            calendar.timeInMillis = System.currentTimeMillis()
+//            calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(hour))
+//            calendar.set(Calendar.MINUTE, Integer.parseInt(minute))
+//            calendar.set(Calendar.SECOND, 0)
+//
+//            if (calendar.timeInMillis <= System.currentTimeMillis()) calendar.add(Calendar.DAY_OF_YEAR, 1)
+//            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+//        }
+
+        fun refreshAlarm(context: Context, hour: String, minute: String, alarmCode: Int) {
             val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmReceiver::class.java).apply { putExtra(HOURS, hour);  putExtra(MINUTES, minute) }
             val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else 0
@@ -43,10 +59,9 @@ class AlarmUtils {
             calendar.set(Calendar.MINUTE, Integer.parseInt(minute))
             calendar.set(Calendar.SECOND, 0)
 
-            if (calendar.timeInMillis <= System.currentTimeMillis()) calendar.add(Calendar.DAY_OF_YEAR, 1)
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
         }
-
 
         fun disableAlarm(context: Context, alarmCode: Int) {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
