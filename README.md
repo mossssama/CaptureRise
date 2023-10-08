@@ -4,7 +4,11 @@
 
 <p id="description">Nativa Android alarm that keeps ringing until the user capture a specific object using his camera to close the alarm</p>
 
+<h2>🚀 Download from here</h2>
+
+[https://play.google.com/store/apps/details?id=com.newOs.captureRise](https://play.google.com/store/apps/details?id=com.newOs.captureRise)
   
+
   
 <h2>🧐 Features</h2>
 
