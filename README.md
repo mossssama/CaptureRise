@@ -6,7 +6,7 @@
 
 <h2>🚀 Download from here</h2>
 
-[https://play.google.com/store/apps/details?id=com.newOs.captureRise](https://play.google.com/store/apps/details?id=com.newOs.captureRise)
+[App link](https://www.amazon.in/mossssama-CaptureRise/dp/B0DGZ7VKKD)
   
 
   
